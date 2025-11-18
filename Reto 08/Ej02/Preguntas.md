@@ -56,6 +56,21 @@ Muy útil si presentas resultados y necesitas justificar “por qué el modelo d
 Los árboles son de los modelos más interpretables, y Graphviz te lo pone bonito y ordenado para que no te explote la cabeza.
 
 ## ¿Qué significa el resultado que devuelve la función predict() en este contexto?
+predict() recibe una medición de flor (las 4 características) y devuelve:
+
+un número (0, 1 o 2)
+
+que corresponde a una especie en iris.target_names
+
+Ejemplo:
+```
+pred1 = clf.predict([[7,3,5,1]])
+```
+Esto podría devolver 2, que significa:
+```
+iris.target_names[2] -> 'virginica'
+```
+Es decir, el modelo cree que esas medidas corresponden a una Iris virginica.
 
 ## ¿Qué ventajas y desventajas tienen los árboles de decisión frente a kNN algoritmos de clasificación?
 

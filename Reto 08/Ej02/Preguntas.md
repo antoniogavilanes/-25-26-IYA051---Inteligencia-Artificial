@@ -48,10 +48,8 @@ Porque te permite:
 <ul>
 <li><strong>Interpretar el modelo</strong>
 Puedes ver cómo el árbol decide según las variables.</li>
-
 <li><strong>Detectar sobreajuste</strong>
 Si el árbol parece la raíz de Yggdrasil (infinitas ramas), está overfitted.</li>
-
 <li><strong>Explicar decisiones</strong>
 Muy útil si presentas resultados y necesitas justificar “por qué el modelo dijo eso”.</li>
 </ul>

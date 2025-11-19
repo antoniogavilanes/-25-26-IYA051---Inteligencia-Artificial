@@ -74,4 +74,50 @@ Es decir, el modelo cree que esas medidas corresponden a una Iris virginica.
 
 ## ¿Qué ventajas y desventajas tienen los árboles de decisión frente a kNN algoritmos de clasificación?
 
+<strong>Ventajas de Árboles de Decisión</strong>
+<ul>
+<li>Muy fáciles de interpretar</li>
+<li>Inferencia rápida, clasificar es instantáneo</li>
+<li>Pueden manejar datos categóricos y numéricos</li>
+<li>Necesitan muy poca normalización o preprocesado</li>
+<li>Detectan interacciones entre variables automáticamente</li>
+</ul>
+
+<strong>Desventajas</strong>
+<ul>
+<li>Pueden sobreajustarse si no se podan</li>
+<li>Sensibles a pequeños cambios en los datos</li>
+</ul>
+
+<strong>Ventajas de kNN</strong>
+<ul>
+<li>Simple de entender y programar</li>
+<li>Funciona muy bien cuando las clases están agrupadas espacialmente</li>
+<li>No necesita entrenamiento</li>
+</ul>
+
+<strong>Desventajas</strong>
+<ul>
+<li>Clasificar es lento con muchos datos</li>
+<li>Requiere normalizar variables</li>
+<li>Sufre en dimensiones altas</li>
+<li>No da interpretabilidad</li>
+</ul>
+
 ## Si cambiáramos los valores de entrada (por ejemplo, 4, 2, 1, 0.2), qué crees que ocurriría y por qué?
+
+Esas medidas:
+<ul>
+<li>Sépalo pequeño</li>
+<li>Pétalo MUY corto y estrecho: 1 cm y 0.2 cm</li>
+</ul>
+Eso es prácticamente la firma de Iris setosa, que tiene pétalos más pequeños que las otras especies.
+
+Entonces el modelo devolvería:
+<ul>
+<li>setosa con alta probabilidad</li>
+</ul>
+
+<strong>¿Por qué?</strong>
+Porque en el dataset, setosa ocupa claramente la región de valores bajos de pétalo.
+Un árbol de decisión lo detecta enseguida y hace un split muy temprano en esa variable

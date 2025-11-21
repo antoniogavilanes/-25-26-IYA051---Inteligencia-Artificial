@@ -1,11 +1,11 @@
-# Preguntas Ej01
+# Preguntas Ej02
 
-## ¿Qué tipo de problema de aprendizaje automático se aborda en este ejercicio y por qué se clasifica así?
+## ¿Qué objetivo persigue el botánico con la aplicación del modelo kNN en este caso?
 
-Es un problema de clasificación supervisada, porque el objetivo es predecir una categoría discreta —en este caso, si un paciente tiene o no tiene diabetes— a partir de un conjunto de atributos de entrada.
-La variable objetivo es binaria: 0 (no diabetes) y 1 (diabetes).
+El botánico busca clasificar automáticamente una flor desconocida dentro de una de las tres especies del conjunto Iris.
+En otras palabras: quiere que el modelo aprenda a reconocer patrones morfológicos (medidas de sépalos y pétalos) para que, cuando le entreguen una flor nueva, el sistema pueda decirle de qué especie es sin necesidad de análisis manual.
 
-## ¿Qué representan los 8 atributos de entrada y qué tipo de variable es la etiqueta “Categoría”?
+## ¿Qué variables componen el conjunto de datos Iris y qué tipo de problema de clasificación se plantea?
 
 Los 8 atributos son características clínicas del paciente, por ejemplo:
 <ul>

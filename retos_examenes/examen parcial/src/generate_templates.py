@@ -1,66 +1,48 @@
 """
-generate_templates.py
-Genera templates de ranks y suits a partir de warps en data/processed.
-Se pide al usuario el nombre de cada carta para generar templates precisos.
+Genera templates automáticamente desde warpeds.
+Muestra la carta recortada y permite asignar número y palo.
+Acepta cualquier formato de imagen en RAW_DIR.
 """
 import cv2
 from pathlib import Path
-from .config import PROCESSED_DIR, TEMPLATES_DIR
-from .utils import ensure_dir, save_image
+from src.segmentacion import detect_cards_in_image
 
-# Configuración de crops en el warp (ajustar según tus cartas)
-RANK_CROP = (0, 200, 0, 100)    # y1,y2,x1,x2
-SUIT_CROP = (0, 200, 0, 100)    # y1,y2,x1,x2
+RAW_DIR = Path("data/raw")
+TEMPLATES_DIR = Path("data/templates")
+RESULT_WARPEDS = Path("results/warpeds")
 
-def crop_rank(warped_img):
-    y1, y2, x1, x2 = RANK_CROP
-    crop = warped_img[y1:y2, x1:x2]
-    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-    _, bin_img = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    return bin_img
-
-def crop_suit(warped_img):
-    y1, y2, x1, x2 = SUIT_CROP
-    crop = warped_img[y1:y2, x1:x2]
-    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-    _, bin_img = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    return bin_img
-
+ACCEPTED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".bmp"}
 
 def main():
-    ensure_dir(TEMPLATES_DIR / "ranks")
-    ensure_dir(TEMPLATES_DIR / "suits")
-
-    warps = sorted((PROCESSED_DIR).glob("warped_*.jpg"))
-    if not warps:
-        print("No se encontraron warps en", PROCESSED_DIR)
-        return
-
-    for i, warp_path in enumerate(warps):
-        print(f"\nProcesando warp: {warp_path.name}")
-        img = cv2.imread(str(warp_path))
-        if img is None:
-            print(" ERROR leyendo imagen:", warp_path)
+    for img_path in sorted(RAW_DIR.glob("*.*")):
+        if img_path.suffix.lower() not in ACCEPTED_EXTENSIONS:
+            continue
+        img_bgr = cv2.imread(str(img_path))
+        if img_bgr is None:
             continue
 
-        rank_bin = crop_rank(img)
-        suit_bin = crop_suit(img)
+        warps, _, _ = detect_cards_in_image(img_bgr, img_name=img_path.stem)
+        for w in warps:
+            # Mostrar warp para identificar número y palo
+            cv2.imshow("Warped Card", w["warped"])
+            cv2.waitKey(1)  # Pequeño delay para mostrar la ventana
 
-        # Mostrar al usuario para que indique nombre real
-        cv2.imshow("Rank crop", rank_bin)
-        cv2.imshow("Suit crop", suit_bin)
-        cv2.waitKey(1)  # Necesario para renderizar
+            # Input de número y palo
+            rank = input("Introduce el número o letra (A,2,...,K): ").strip()
+            suit = input("Introduce el palo (corazones/picas/diamantes/trebol): ").strip()
 
-        rank_name = input("Ingresa el nombre del RANK (ej: A, 2, 10, K): ").strip()
-        suit_name = input("Ingresa el nombre del SUIT (ej: corazon, picas, diamante, trebol): ").strip()
+            # Crear carpeta del palo
+            suit_dir = TEMPLATES_DIR / suit
+            suit_dir.mkdir(parents=True, exist_ok=True)
 
-        # Guardar templates
-        save_image(TEMPLATES_DIR / "ranks" / f"{rank_name}.png", rank_bin)
-        save_image(TEMPLATES_DIR / "suits" / f"{suit_name}.png", suit_bin)
+            # Guardar la imagen con nombre: RANK_WARP_XXX.png
+            existing = list(suit_dir.glob(f"{rank}_warp_*.png"))
+            idx = len(existing)
+            save_path = suit_dir / f"{rank}_warp_{idx:03d}.png"
+            cv2.imwrite(str(save_path), w["warped"])
+            print(f"Guardado: {save_path}")
 
-        cv2.destroyAllWindows()
-
-    print("\nTemplates generados en:", TEMPLATES_DIR)
+            cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()
